@@ -33,7 +33,7 @@
   <br><br>
 
 ## 🗼 Architecture
-![llm-service](https://github.com/user-attachments/assets/6706f365-c4ad-4f09-bb43-7aebcbe5477b)
+![llm-service](https://github.com/user-attachments/assets/352ceaf8-9576-4207-9e92-00d0465eaf1b)
 
 ## 🛠️ Skills
 
