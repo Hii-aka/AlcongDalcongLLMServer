@@ -26,7 +26,14 @@
 
 ## 📚 관련 URL
 - [서버 API](https://hyobin-llm.duckdns.org/docs)
+- [LLM Streaming API 클라이언트 서버 API](https://hyobin-llm-client.duckdns.org/swagger-ui/index.html)
+- [서비스 URL](https://hyobin-llm.vercel.app)
+- [LLM Streaming 서버 Repository](https://github.com/hellmir/LLM-Streaming-Server)
+- [LLM Streaming 클라이언트 Repository](https://github.com/hellmir/LLM-Streaming-Client)
   <br><br>
+
+## 🗼 Architecture
+![llm-service](https://github.com/user-attachments/assets/6706f365-c4ad-4f09-bb43-7aebcbe5477b)
 
 ## 🛠️ Skills
 
