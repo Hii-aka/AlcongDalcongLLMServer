@@ -8,7 +8,11 @@
 - HCX-003
 - Gemini 1.5 Pro
 - GPT 3.5 Turbo
-  <br><br>
+<br><br>
+
+## 📼 서비스 시연
+![hyobin-llm](https://github.com/user-attachments/assets/f62ff497-d639-4176-b21a-e29d6cda76bd)
+<br><br>
 
 ## 📅 프로젝트 기간
 <b>2025. 01. 26 ~ 2025. 01. 28</b>
