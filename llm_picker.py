@@ -16,6 +16,8 @@ def get_llm(llm_type: str):
         return llm_generator.generate_chat_open_ai()
     elif llm_type == "claude":
         return llm_generator.generate_chat_anthropic()
+    elif llm_type == "deepseek":
+        return llm_generator.generate_chat_deep_seek()
     elif llm_type == "mistral":  # 기본 모델을 변경하더라도 get_llm 함수가 변경에 닫혀 있도록 하기 위해 중복 설정
         return llm_generator.generate_chat_mistral_ai()
     else:

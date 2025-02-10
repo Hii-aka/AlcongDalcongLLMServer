@@ -43,6 +43,14 @@ def generate_chat_anthropic():
         model='claude-3-haiku',
         temperature=0,
     )
+
+
+def generate_chat_deep_seek():
+    return ChatDeepSeek(
+        model="deepseek-chat",
+        temperature=0,
+        timeout=None,
+        max_retries=2
     )
 
 
