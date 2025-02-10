@@ -20,6 +20,7 @@ app = FastAPI(
     \n  - Gemini
     \n  - GPT
     \n  - Claude 
+    \n  - DeepSeek
     \n </b>
     """,
     version="3.0"
