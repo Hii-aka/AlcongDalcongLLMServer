@@ -1,3 +1,4 @@
+from langchain_anthropic import ChatAnthropic
 from langchain_community.chat_models import ChatClovaX
 from langchain_community.llms.sambanova import SambaNovaCloud
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -35,6 +36,13 @@ def generate_chat_open_ai():
         temperature=0,
         model_name="gpt-3.5-turbo",
         streaming=True
+
+
+def generate_chat_anthropic():
+    return ChatAnthropic(
+        model='claude-3-haiku',
+        temperature=0,
+    )
     )
 
 

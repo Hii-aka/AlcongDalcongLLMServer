@@ -19,6 +19,7 @@ app = FastAPI(
     \n  - ClovaX
     \n  - Gemini
     \n  - GPT
+    \n  - Claude 
     \n </b>
     """,
     version="3.0"

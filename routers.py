@@ -48,6 +48,7 @@ from fastapi.responses import StreamingResponse
     \n  - clovax
     \n  - gemini
     \n  - gpt
+    \n  - claude 
     \n- template: 요청 프롬프트(요구사항)
     \n- options: 요청 프롬프트에 적용할 조건들(선택사항)
     \n  - Key: Array Value 형태로 전송
@@ -82,6 +83,7 @@ def invoke_llm(request: LLMRequest):
     \n  - clovax
     \n  - gemini
     \n  - gpt
+    \n  - claude 
     \n- template: 요청 프롬프트(요구사항)
     \n- options: 요청 프롬프트에 적용할 조건들(선택사항)
     \n  - Key: Array Value 형태로 전송
