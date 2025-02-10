@@ -12,7 +12,7 @@ def generate_response(llm_type: str, template_content: str, options: str):
         input_variables=["options"],
         template=TEMPLATE_HEADER + template_content + TEMPLATE_FOOTER
     )
-    llm = get_llm(llm_type)
+    llm = get_llm(llm_type.lower())
     chain = prompt | llm
     i = 0
 

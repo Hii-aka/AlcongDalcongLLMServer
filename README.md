@@ -4,10 +4,12 @@
 
 ### 다양한 생성형 AI 모델의 스트리밍 서비스를 제공하는 서버
 - Mistral Large
-- Llama3.3
-- HCX-003
 - Gemini 1.5 Pro
+- Llama 3.3
+- HCX-003
 - GPT 3.5 Turbo
+- Claude Haiku
+- DeepSeek V3
 <br><br>
 
 ## 📼 서비스 시연
@@ -19,7 +21,7 @@
 <br><br>
 
 ## ![Image](https://github.com/user-attachments/assets/1838d6b9-69ff-43fe-80b1-b1e39709cef9) 모델 추가 및 리팩터링
-<b>2025. 01. 30</b>
+<b>2025. 01. 30, 2025. 02. 10</b>
 <br><br>
 
 ## 👫 구성원
@@ -29,16 +31,17 @@
   <br>
 
 ## 📚 관련 URL
-- [서버 API](https://hyobin-llm.duckdns.org/docs)
-- [LLM Streaming API 클라이언트 서버 API](https://hyobin-llm-client.duckdns.org/swagger-ui/index.html)
 - [서비스 URL](https://hyobin-llm.vercel.app)
-- [LLM Streaming 서버 Repository](https://github.com/hellmir/LLM-Streaming-Server)
-- [LLM Streaming 클라이언트 Repository](https://github.com/hellmir/LLM-Streaming-Client)
+- [LLM Streaming 서버 API](https://hyobin-llm.duckdns.org/docs)
+- [LLM Spring API 클라이언트 서버 API](https://hyobin-llm-spring.duckdns.org/swagger-ui/index.html)
+- [LLM Nest.js API 클라이언트 서버 API](https://hyobin-llm-nest.duckdns.org/api)
+- [LLM 클라이언트 Repository](https://github.com/hellmir/LLM-Streaming-Client)
+- [LLM Spring API 클라이언트 서버 Repository](https://github.com/hellmir/LLM-Spring-API-Client)
+- [LLM Nest API 클라이언트 서버 Repository](https://github.com/hellmir/LLM-Nest-API-Client)
   <br><br>
 
 ## 🗼 Architecture
-![llm-service](https://github.com/user-attachments/assets/352ceaf8-9576-4207-9e92-00d0465eaf1b)
-
+![llm-service](https://github.com/user-attachments/assets/c63002e7-8260-4cd8-99de-7cbd4ab4d850)
 ## 🛠️ Skills
 
 ## Back-End
@@ -54,6 +57,8 @@
 - ChatClovaX
 - ChatGoogleGenerativeAI
 - ChatOpenAI
+- ChatAnthropic
+- ChatDeepSeek
 
 ## DevOps
 
@@ -277,3 +282,46 @@
 [LCSV-39](https://langchain.atlassian.net/browse/LCSV-39) README.md 추가
 
 [LCSV-60](https://langchain.atlassian.net/browse/LCSV-60) llm\_picker 모듈 리팩터링
+<br><br>
+
+## 릴리스 정보 - LangChain Service - LlmApiServerRelease02/10
+
+### 하위 작업
+
+[LCSV-77](https://langchain.atlassian.net/browse/LCSV-77) API 키 발급
+
+[LCSV-78](https://langchain.atlassian.net/browse/LCSV-78) ChatAnthropic 패키지 설치
+
+[LCSV-79](https://langchain.atlassian.net/browse/LCSV-79) claude-3-haiku 모델 적용
+
+[LCSV-80](https://langchain.atlassian.net/browse/LCSV-80) Swagger 문서 업데이트
+
+[LCSV-82](https://langchain.atlassian.net/browse/LCSV-82) API 키 발급
+
+[LCSV-83](https://langchain.atlassian.net/browse/LCSV-83) ChatDeepSeek 패키지 설치
+
+[LCSV-84](https://langchain.atlassian.net/browse/LCSV-84) deepseek-chat 모델 적용
+
+[LCSV-85](https://langchain.atlassian.net/browse/LCSV-85) Swagger 문서 업데이트
+
+[LCSV-87](https://langchain.atlassian.net/browse/LCSV-87) 모델 순서 변경
+
+[LCSV-88](https://langchain.atlassian.net/browse/LCSV-88) Swagger 문서의 모델 목록 업데이트
+
+[LCSV-89](https://langchain.atlassian.net/browse/LCSV-89) 일부 모델의 온도를 0.7로 조정
+
+[LCSV-90](https://langchain.atlassian.net/browse/LCSV-90) 모든 모델의 최대 토큰 제한을 2,048개로 조정
+
+[LCSV-91](https://langchain.atlassian.net/browse/LCSV-91) 클라이언트의 모델명 대소문자 입력에 영향 받지 않도록 변경
+
+### 스토리
+
+[LCSV-76](https://langchain.atlassian.net/browse/LCSV-76) 클라이언트는 Claude Haiku 모델 API를 사용할 수 있다
+
+[LCSV-81](https://langchain.atlassian.net/browse/LCSV-81) 클라이언트는 DeepSeek V3 모델 API를 사용할 수 있다
+
+[LCSV-86](https://langchain.atlassian.net/browse/LCSV-86) 전반적인 리팩터링
+
+### 작업
+
+[LCSV-39](https://langchain.atlassian.net/browse/LCSV-39) README.md 추가

@@ -15,13 +15,15 @@ app = FastAPI(
     \n ### 제공 모델
     \n <b>
     \n  - Mistral
+    \n  - Gemini
     \n  - Llama
     \n  - ClovaX
-    \n  - Gemini
     \n  - GPT
+    \n  - Claude 
+    \n  - DeepSeek
     \n </b>
     """,
-    version="3.0"
+    version="3.1"
 )
 
 app.add_middleware(
