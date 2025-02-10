@@ -23,7 +23,7 @@ app = FastAPI(
     \n  - DeepSeek
     \n </b>
     """,
-    version="3.0"
+    version="3.1"
 )
 
 app.add_middleware(
