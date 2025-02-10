@@ -12,8 +12,9 @@ router = APIRouter(prefix="/streaming")
 
 
 class LLMRequest(BaseModel):
-    llm_type: Optional[str] = Field(default=None, description="LLM 모델 유형(clovax, chatgpt, llama): 미입력 시 기본 모델 사용",
-                                    examples=["mistral", "llama", "clovax", "gemini", "gpt"])
+    llm_type: Optional[str] = Field(default=None,
+                                    description="LLM 모델 유형(mistral, gemini, llama, clovax, gpt, claude, deepseek): 미입력 시 기본 모델 사용",
+                                    examples=["mistral", "gemini", "llama", "clovax", "gpt", "claude", "deepseek"])
     template: str = Field(..., description="요청 프롬프트(요구사항)", examples=["레시피 추천해 줘"])
     options: Optional[Dict[str, List[str]]] = Field(
         default=None,
@@ -44,9 +45,9 @@ from fastapi.responses import StreamingResponse
     다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 토큰화하여 Stream 형태로 제공됩니다.
     \n- llm_type: LLM 모델 유형(미입력 시 기본 모델 사용)
     \n  - mistral
+    \n  - gemini
     \n  - llama
     \n  - clovax
-    \n  - gemini
     \n  - gpt
     \n  - claude 
     \n  - deepseek 
@@ -79,10 +80,10 @@ def invoke_llm(request: LLMRequest):
     description="""
     다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 최소 단위로 토큰화하여 SSE를 통한 Stream 형태로 제공됩니다.
     \n- llm_type: LLM 모델 유형(미입력 시 기본 모델 사용)
-    \n  - mistral 
+    \n  - mistral
+    \n  - gemini
     \n  - llama
     \n  - clovax
-    \n  - gemini
     \n  - gpt
     \n  - claude 
     \n  - deepseek
