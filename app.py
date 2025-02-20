@@ -15,9 +15,9 @@ app = FastAPI(
     \n ### 제공 모델
     \n <b>
     \n  - Mistral
+    \n  - ClovaX
     \n  - Gemini
     \n  - Llama
-    \n  - ClovaX
     \n  - GPT
     \n  - Claude 
     \n  - DeepSeek
