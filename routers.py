@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Dict, List, Optional
 
+import starlette.responses
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from fastapi import APIRouter
@@ -9,13 +10,13 @@ from pydantic import BaseModel, Field
 
 from global_exception_handler import throw_unauthorized_exception, throw_paid_model_unauthorized_exception, \
     throw_paid_model_usage_limit_exception
-from services import generate_response
+from services import generate_response, generate_sync_response
 
-router = APIRouter(prefix="/streaming")
+router = APIRouter(prefix="")
 
 paid_model_usage = 0
 MODEL_DESCRIPTION = """
-    \n- llm_type: LLM 모델 유형(미입력 시 기본 모델 사용)
+    \n- llm_type: LLM 모델 유형 (미입력 시 기본 모델 사용)
     \n  - mistral (현재 기본 모델)
     \n  - clovax
     \n  - gemini
@@ -61,7 +62,27 @@ from fastapi.responses import StreamingResponse
 
 
 @router.post(
-    "",
+    "/sync",
+    summary="LLM 서비스 이용",
+    description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 전체 응답이 한 번에 제공됩니다." + MODEL_DESCRIPTION
+)
+def invoke_llm(request: LLMRequest):
+    load_dotenv()
+    authenticate(request.llm_type.lower(), request.secret_key)
+
+    llm_type = request.llm_type if request.llm_type else ""
+    options = request.options if request.options else {"Not necessary"}
+
+    response_content = generate_sync_response(llm_type, request.template, options)
+
+    if isinstance(response_content, set):
+        response_content = list(response_content)
+
+    return starlette.responses.JSONResponse(content=response_content)
+
+
+@router.post(
+    "/streaming",
     summary="LLM 스트리밍 서비스 이용",
     description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 토큰화하여 Stream 형태로 제공됩니다." + MODEL_DESCRIPTION
 )
@@ -82,7 +103,7 @@ def invoke_llm(request: LLMRequest):
 
 
 @router.post(
-    "/sse",
+    "/streaming/sse",
     summary="LLM 스트리밍 SSE 서비스 이용",
     description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 최소 단위로 토큰화하여 SSE를 통한 Stream 형태로 제공됩니다." + MODEL_DESCRIPTION
 )
