@@ -1,4 +1,4 @@
-# ![ai](https://github.com/user-attachments/assets/0183c7fc-c7a7-479b-8108-4c68de3dffa7) 생성형 AI Streaming Server<br><br>
+# ![ai](https://github.com/user-attachments/assets/0183c7fc-c7a7-479b-8108-4c68de3dffa7) 생성형 AI Streaming Server <img src="https://img.shields.io/badge/v3.2-6DB33F?style=flat-square&logo=Adobe&logoColor=white"><br><br>
 
 ## 📋 프로젝트 설명
 
@@ -7,7 +7,7 @@
 - HCX-003
 - Gemini 1.5 Pro
 - Llama 3.3
-- GPT 3.5 Turbo
+- GPT 4o Mini
 - Claude Haiku
 - DeepSeek V3
 <br><br>
@@ -21,7 +21,7 @@
 <br><br>
 
 ## ![Image](https://github.com/user-attachments/assets/1838d6b9-69ff-43fe-80b1-b1e39709cef9) 모델 추가 및 리팩터링
-<b>2025. 01. 30, 2025. 02. 10</b>
+<b>2025. 01. 30, 2025. 02. 10, 2025. 02. 21</b>
 <br><br>
 
 ## 👫 구성원
@@ -322,6 +322,53 @@
 [LCSV-81](https://langchain.atlassian.net/browse/LCSV-81) 클라이언트는 DeepSeek V3 모델 API를 사용할 수 있다
 
 [LCSV-86](https://langchain.atlassian.net/browse/LCSV-86) 전반적인 리팩터링
+
+### 작업
+
+[LCSV-39](https://langchain.atlassian.net/browse/LCSV-39) README.md 추가
+<br><br>
+
+## 릴리스 정보 - LangChain Service - LlmApiServerRelease02/21
+
+### 하위 작업
+
+[LCSV-93](https://langchain.atlassian.net/browse/LCSV-93) GPT API 유료 Product Key 발급
+
+[LCSV-94](https://langchain.atlassian.net/browse/LCSV-94) GPT 유료 Product Key 적용
+
+[LCSV-95](https://langchain.atlassian.net/browse/LCSV-95) gpt-3.5-turbo 모델 요청을 gpt-4o-mini 모델 요청으로 변경
+
+[LCSV-96](https://langchain.atlassian.net/browse/LCSV-96) 유료 모델인 GPT 4o Mini 모델의 Secret Key 변경 \(SHA-256, Hash Value, 임의 시간의 nano second 변환\)
+
+[LCSV-97](https://langchain.atlassian.net/browse/LCSV-97) GPT 모델 Secret Key 인증 실패에 대한 예외 처리 추가
+
+[LCSV-98](https://langchain.atlassian.net/browse/LCSV-98) APScheduler 의존성 추가
+
+[LCSV-99](https://langchain.atlassian.net/browse/LCSV-99) APScheduler를 통해 GPT 4o Mini 모델의 하루 이용 횟수를 1만 회로 제한
+
+[LCSV-100](https://langchain.atlassian.net/browse/LCSV-100) GPT 모델 일일 사용량 한도 초과에 대한 예외 처리 추가
+
+[LCSV-101](https://langchain.atlassian.net/browse/LCSV-101) GPT모델  사용 요청에 대한 로깅 추가
+
+[LCSV-102](https://langchain.atlassian.net/browse/LCSV-102) Swagger 문서 업데이트
+
+[LCSV-103](https://langchain.atlassian.net/browse/LCSV-103) 함수 구조 및 소스 재사용 관련한 전반적인 리팩터링
+
+[LCSV-105](https://langchain.atlassian.net/browse/LCSV-105) 전체  LLM 응답을 반환하는 엔드포인트 추가
+
+[LCSV-106](https://langchain.atlassian.net/browse/LCSV-106) 전체 LLM 응답 수신 시 문자열 데이터를 파싱해 클라이언트에게 JSON 포맷으로 응답하도록 설정
+
+[LCSV-107](https://langchain.atlassian.net/browse/LCSV-107) 새로운 엔드포인트에 대한 Swagger 문서 추가
+
+### 스토리
+
+[LCSV-92](https://langchain.atlassian.net/browse/LCSV-92) 클라이언트는 GPT 4o Mini 모델 API를 사용할 수 있다
+
+[LCSV-104](https://langchain.atlassian.net/browse/LCSV-104) 클라이언트는 요청에 대한 전체 LLM 데이터 응답을 반환하는 엔드포인트를 이용할 수 있다
+
+### 에픽
+
+[LCSV-1](https://langchain.atlassian.net/browse/LCSV-1) LLM API Server 구현
 
 ### 작업
 

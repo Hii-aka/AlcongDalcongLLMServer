@@ -37,7 +37,7 @@ def generate_chat_google_generative_ai():
 def generate_chat_open_ai():
     return ChatOpenAI(
         temperature=0,
-        model_name="gpt-3.5-turbo",
+        model_name="gpt-4o-mini",
         streaming=True,
         max_tokens=2_048
     )
