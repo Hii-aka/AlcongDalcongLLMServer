@@ -1,3 +1,5 @@
+import json
+
 from langchain_core.prompts import PromptTemplate
 
 from llm_picker import get_llm
@@ -23,3 +25,27 @@ def generate_response(llm_type: str, template_content: str, options: str):
             yield chunk.content
         else:
             yield str(chunk)
+
+
+def generate_sync_response(llm_type: str, template_content: str, options: str):
+    prompt = PromptTemplate(
+        input_variables=["options"],
+        template=TEMPLATE_HEADER + template_content + TEMPLATE_FOOTER
+    )
+    llm = get_llm(llm_type.lower())
+    chain = prompt | llm
+
+    response = chain.invoke({"options": options})
+
+    if hasattr(response, "content"):
+        response_content = response.content
+
+        try:
+            response_content = json.loads(response_content)
+        except json.JSONDecodeError:
+            print("JSON 파싱 실패:", response_content)
+            return response_content
+
+        return response_content
+
+    return response
