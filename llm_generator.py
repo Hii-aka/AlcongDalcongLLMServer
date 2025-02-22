@@ -1,14 +1,14 @@
-from langchain_anthropic import ChatAnthropic
-from langchain_community.chat_models import ChatClovaX
-from langchain_community.llms.sambanova import SambaNovaCloud
-from langchain_deepseek import ChatDeepSeek
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_mistralai import ChatMistralAI
-from langchain_openai import ChatOpenAI
+import langchain_anthropic
+import langchain_community.chat_models
+import langchain_community.llms.sambanova
+import langchain_deepseek
+import langchain_google_genai
+import langchain_mistralai
+import langchain_openai
 
 
 def generate_samba_nova_cloud():
-    return SambaNovaCloud(
+    return langchain_community.llms.sambanova.SambaNovaCloud(
         model="Meta-Llama-3.3-70B-Instruct",
         max_tokens=2_048,
         temperature=0.7,
@@ -18,7 +18,7 @@ def generate_samba_nova_cloud():
 
 
 def generate_chat_clova_x():
-    return ChatClovaX(
+    return langchain_community.chat_models.ChatClovaX(
         model="HCX-003",
         temperature=0.7,
         max_tokens=2_048,
@@ -27,7 +27,7 @@ def generate_chat_clova_x():
 
 
 def generate_chat_google_generative_ai():
-    return ChatGoogleGenerativeAI(
+    return langchain_google_genai.ChatGoogleGenerativeAI(
         model="gemini-1.5-pro",
         temperature=0.7,
         max_output_tokens=2_048
@@ -35,7 +35,7 @@ def generate_chat_google_generative_ai():
 
 
 def generate_chat_open_ai():
-    return ChatOpenAI(
+    return langchain_openai.ChatOpenAI(
         temperature=0,
         model_name="gpt-4o-mini",
         streaming=True,
@@ -44,7 +44,7 @@ def generate_chat_open_ai():
 
 
 def generate_chat_anthropic():
-    return ChatAnthropic(
+    return langchain_anthropic.ChatAnthropic(
         model='claude-3-haiku',
         temperature=0,
         max_tokens=2_048
@@ -52,7 +52,7 @@ def generate_chat_anthropic():
 
 
 def generate_chat_deep_seek():
-    return ChatDeepSeek(
+    return langchain_deepseek.ChatDeepSeek(
         model="deepseek-chat",
         temperature=0,
         max_tokens=2_048,
@@ -62,7 +62,7 @@ def generate_chat_deep_seek():
 
 
 def generate_chat_mistral_ai():
-    return ChatMistralAI(
+    return langchain_mistralai.ChatMistralAI(
         model="mistral-large-latest",
         temperature=0.7,
         max_tokens=2_048,
