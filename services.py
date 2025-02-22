@@ -3,12 +3,11 @@ import json
 import logging
 import os
 
-import apscheduler
 import dotenv
 import httpx
-from langchain_core.prompts import PromptTemplate
+import langchain_core.prompts
 
-from llm_picker import get_llm
+import llm_picker
 
 LINE_BREAK = "\n"
 TEMPLATE_HEADER = "Given the {options} I want you to create:" + LINE_BREAK
@@ -19,11 +18,11 @@ log = logging.getLogger("services_logger")
 
 
 def generate_response(llm_type: str, template_content: str, options: str):
-    prompt = PromptTemplate(
+    prompt = langchain_core.prompts.PromptTemplate(
         input_variables=["options"],
         template=TEMPLATE_HEADER + template_content + TEMPLATE_FOOTER
     )
-    llm = get_llm(llm_type.lower())
+    llm = llm_picker.get_llm(llm_type.lower())
     chain = prompt | llm
     i = 0
 
@@ -37,11 +36,11 @@ def generate_response(llm_type: str, template_content: str, options: str):
 
 
 async def generate_sync_response(llm_type: str, template_content: str, options: str):
-    prompt = PromptTemplate(
+    prompt = langchain_core.prompts.PromptTemplate(
         input_variables=["options"],
         template=TEMPLATE_HEADER + template_content + TEMPLATE_FOOTER
     )
-    llm = get_llm(llm_type.lower())
+    llm = llm_picker.get_llm(llm_type.lower())
     chain = prompt | llm
 
     response = chain.invoke({"options": options})
@@ -128,10 +127,3 @@ def reset_image_search_usage():
     paid_model_usage = 0
 
     log.info("이미지 검색 사용량이 초기화 되었습니다. 일일 사용량: %d", image_search_usage)
-
-
-scheduler = apscheduler.schedulers.background.BackgroundScheduler()
-
-# 매일 자정마다 이미지 검색 사용량 초기화
-scheduler.add_job(reset_image_search_usage, "cron", hour=0, minute=0)
-scheduler.start()
