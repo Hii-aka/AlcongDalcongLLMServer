@@ -21,7 +21,7 @@
 <br><br>
 
 ## ![Image](https://github.com/user-attachments/assets/1838d6b9-69ff-43fe-80b1-b1e39709cef9) 모델 추가 및 리팩터링
-<b>2025. 01. 30, 2025. 02. 10, 2025. 02. 21</b>
+<b>2025. 01. 30, 2025. 02. 10, 2025. 02. 21, 2025. 02. 22</b>
 <br><br>
 
 ## 👫 구성원
@@ -373,3 +373,54 @@
 ### 작업
 
 [LCSV-39](https://langchain.atlassian.net/browse/LCSV-39) README.md 추가
+<br><br>
+
+## 릴리스 정보 - LangChain Service - LlmApiServerRelease02/22
+
+### 하위 작업
+
+[LCSV-109](https://langchain.atlassian.net/browse/LCSV-109) Google Cloud API Key 발급
+
+[LCSV-110](https://langchain.atlassian.net/browse/LCSV-110) Google Custom Search Engine 생성
+
+[LCSV-111](https://langchain.atlassian.net/browse/LCSV-111) 각 LLM 수신 데이터의 name 파라미터를 기반으로 Google Custom Search API 호출
+
+[LCSV-112](https://langchain.atlassian.net/browse/LCSV-112) 수신한 이미지 URL을 원본 JSON 데이터의 파라미터로 각각 삽입
+
+[LCSV-113](https://langchain.atlassian.net/browse/LCSV-113) 이미지 검색의 일일 이용 횟수를 100 회로 제한
+
+[LCSV-114](https://langchain.atlassian.net/browse/LCSV-114) APScheduler를 통해 매일 자정에 일일 이용 횟수를 초기화하도록 설정
+
+[LCSV-115](https://langchain.atlassian.net/browse/LCSV-115) 일일 사용 한도 초과 시 대체 이미지 삽입 후 전송하도록 설정
+
+[LCSV-116](https://langchain.atlassian.net/browse/LCSV-116) GOOGLE\_IMAGE\_API\_KEY 환경변수 추가
+
+[LCSV-117](https://langchain.atlassian.net/browse/LCSV-117) CUSTOM\_SEARCH\_ENGINE\_ID 환경변수 추가
+
+[LCSV-118](https://langchain.atlassian.net/browse/LCSV-118) SEARCH\_URL 환경변수 추가
+
+[LCSV-119](https://langchain.atlassian.net/browse/LCSV-119) DEFAULT\_IMAGE\_URL 환경변수 추가
+
+[LCSV-122](https://langchain.atlassian.net/browse/LCSV-122) 스케줄러 모듈 분리 및 GPT와 이미지 일일 사용 한도 초기화 호출 로직 통합
+
+[LCSV-123](https://langchain.atlassian.net/browse/LCSV-123) 전체 프로젝트의 importing 형식을 from ~ import 방식에서 상위 모듈 import 후 디렉토리 구조를 통해 참조하는 방식으로 변경
+
+[LCSV-124](https://langchain.atlassian.net/browse/LCSV-124) .env 파일의 환경변수 정리
+
+[LCSV-125](https://langchain.atlassian.net/browse/LCSV-125) routers 모듈의 로깅 인스턴스 변수명을 logger에서 log로 변경
+
+[LCSV-126](https://langchain.atlassian.net/browse/LCSV-126) 스케줄러의 일일 사용량 초기화 시간을 Google Cloud 서버\(미국 서부\)의 초기화 시간에 맞춰 17시로 조정
+
+### 스토리
+
+[LCSV-108](https://langchain.atlassian.net/browse/LCSV-108) 클라이언트는 LLM의 응답과 해당 응답에 대한 이미지를 함께 수신할 수 있다
+
+### 에픽
+
+[LCSV-1](https://langchain.atlassian.net/browse/LCSV-1) LLM API Server 구현
+
+### 작업
+
+[LCSV-39](https://langchain.atlassian.net/browse/LCSV-39) README.md 추가
+
+[LCSV-121](https://langchain.atlassian.net/browse/LCSV-121) 전반적인 리팩터링
