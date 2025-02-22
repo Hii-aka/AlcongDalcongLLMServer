@@ -1,5 +1,11 @@
+import asyncio
 import json
+import logging
+import os
 
+import apscheduler
+import dotenv
+import httpx
 from langchain_core.prompts import PromptTemplate
 
 from llm_picker import get_llm
@@ -7,6 +13,9 @@ from llm_picker import get_llm
 LINE_BREAK = "\n"
 TEMPLATE_HEADER = "Given the {options} I want you to create:" + LINE_BREAK
 TEMPLATE_FOOTER = LINE_BREAK + "Answer in KOREAN"
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("services_logger")
 
 
 def generate_response(llm_type: str, template_content: str, options: str):
@@ -21,13 +30,13 @@ def generate_response(llm_type: str, template_content: str, options: str):
     for chunk in chain.stream({"options": options}):
         if hasattr(chunk, "content"):
             i += 1
-            print("chunk " + str(i) + ": ", chunk)
+            log.info("chunk %s: %s", str(i), chunk)
             yield chunk.content
         else:
             yield str(chunk)
 
 
-def generate_sync_response(llm_type: str, template_content: str, options: str):
+async def generate_sync_response(llm_type: str, template_content: str, options: str):
     prompt = PromptTemplate(
         input_variables=["options"],
         template=TEMPLATE_HEADER + template_content + TEMPLATE_FOOTER
@@ -43,9 +52,86 @@ def generate_sync_response(llm_type: str, template_content: str, options: str):
         try:
             response_content = json.loads(response_content)
         except json.JSONDecodeError:
-            print("JSON 파싱 실패:", response_content)
+            log.info("JSON 파싱 실패:", response_content)
             return response_content
+
+        food_names = [item["name"] for item in response_content if "name" in item]
+        log.info("추천 메뉴 목록: %s", food_names)
+
+        await add_images(food_names, response_content)
 
         return response_content
 
     return response
+
+
+image_search_usage = 0
+
+dotenv.load_dotenv()
+GOOGLE_API_KEY = os.environ.get("GOOGLE_IMAGE_API_KEY")
+CX = os.environ.get("CUSTOM_SEARCH_ENGINE_ID")
+SEARCH_URL = os.environ.get("SEARCH_URL")
+DEFAULT_IMAGE_URL = os.environ.get("DEFAULT_IMAGE_URL")
+SEARCH_USAGE_LIMIT_PER_DAY_EXCEEDED_MESSAGE = "일일 검색 사용량을 모두 소진하여 기본 이미지로 대체되었습니다."
+
+
+async def add_images(food_names, response_content):
+    global image_search_usage
+    log.info("일일 이미지 검색 사용량: %s", image_search_usage)
+
+    image_urls = []
+
+    # 이미지 검색 일일 사용 한도를 100회로 제한
+    if image_search_usage + len(food_names) >= 100:
+        log.warning(SEARCH_USAGE_LIMIT_PER_DAY_EXCEEDED_MESSAGE)
+
+        for i in food_names:
+            image_urls[i] = DEFAULT_IMAGE_URL
+    else:
+        image_urls = await asyncio.gather(*[search_google_images(name) for name in food_names])
+        image_search_usage += len(image_urls)
+
+    for i, item in enumerate(response_content):
+        if i < len(image_urls):
+            item["imageUrls"] = image_urls[i]
+
+    updated_json = json.dumps(response_content, ensure_ascii=False, indent=2)
+    log.info("반환 데이터: %s", updated_json)
+
+
+async def search_google_images(food_name):
+    params = {
+        "key": GOOGLE_API_KEY,
+        "cx": CX,
+        "q": food_name,
+        "searchType": "image",
+        "num": os.environ.get("NEEDED_IMAGE_COUNT")
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(SEARCH_URL, params=params)
+
+    if response.status_code != 200:
+        log.warning(SEARCH_USAGE_LIMIT_PER_DAY_EXCEEDED_MESSAGE)
+        return [DEFAULT_IMAGE_URL]
+
+    data = response.json()
+    image_urls = [item["link"] for item in data.get("items", [])]
+    for image_url in image_urls:
+        log.info("이미지 주소: %s", image_url)
+
+    return image_urls
+
+
+def reset_image_search_usage():
+    global paid_model_usage
+    paid_model_usage = 0
+
+    log.info("이미지 검색 사용량이 초기화 되었습니다. 일일 사용량: %d", image_search_usage)
+
+
+scheduler = apscheduler.schedulers.background.BackgroundScheduler()
+
+# 매일 자정마다 이미지 검색 사용량 초기화
+scheduler.add_job(reset_image_search_usage, "cron", hour=0, minute=0)
+scheduler.start()
