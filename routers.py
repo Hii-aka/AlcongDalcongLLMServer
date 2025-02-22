@@ -1,18 +1,16 @@
 import logging
 import os
-from typing import Dict, List, Optional
+import typing
 
+import dotenv
+import fastapi
+import pydantic
 import starlette.responses
-from apscheduler.schedulers.background import BackgroundScheduler
-from dotenv import load_dotenv
-from fastapi import APIRouter
-from pydantic import BaseModel, Field
 
-from global_exception_handler import throw_unauthorized_exception, throw_paid_model_unauthorized_exception, \
-    throw_paid_model_usage_limit_exception
-from services import generate_response, generate_sync_response
+import global_exception_handler
+import services
 
-router = APIRouter(prefix="")
+router = fastapi.APIRouter(prefix="")
 
 paid_model_usage = 0
 MODEL_DESCRIPTION = """
@@ -31,15 +29,16 @@ MODEL_DESCRIPTION = """
 """
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("gpt_logger")
+log = logging.getLogger("gpt_logger")
 
 
-class LLMRequest(BaseModel):
-    llm_type: Optional[str] = Field(default=None,
-                                    description="LLM 모델 유형(mistral, gemini, llama, clovax, gpt, claude, deepseek): 미입력 시 기본 모델 사용",
-                                    examples=["mistral", "gemini", "llama", "clovax", "gpt", "claude", "deepseek"])
-    template: str = Field(..., description="요청 프롬프트(요구사항)", examples=["레시피 추천해 줘"])
-    options: Optional[Dict[str, List[str]]] = Field(
+class LLMRequest(pydantic.BaseModel):
+    llm_type: typing.Optional[str] = pydantic.Field(default=None,
+                                                    description="LLM 모델 유형(mistral, gemini, llama, clovax, gpt, claude, deepseek): 미입력 시 기본 모델 사용",
+                                                    examples=["mistral", "gemini", "llama", "clovax", "gpt", "claude",
+                                                              "deepseek"])
+    template: str = pydantic.Field(..., description="요청 프롬프트(요구사항)", examples=["레시피 추천해 줘"])
+    options: typing.Optional[typing.Dict[str, typing.List[str]]] = pydantic.Field(
         default=None,
         description="요청 프롬프트에 적용할 조건들(선택사항)",
         examples=[
@@ -52,7 +51,7 @@ class LLMRequest(BaseModel):
             }
         ]
     )
-    secret_key: str = Field(..., description="사용자 인증을 위한 비밀 키", examples=["abcde"])
+    secret_key: str = pydantic.Field(..., description="사용자 인증을 위한 비밀 키", examples=["abcde"])
 
     class Config:
         title = "LLM 서비스 요청 파라미터"
@@ -66,14 +65,14 @@ from fastapi.responses import StreamingResponse
     summary="LLM 서비스 이용",
     description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 전체 응답이 한 번에 제공됩니다." + MODEL_DESCRIPTION
 )
-def invoke_llm(request: LLMRequest):
-    load_dotenv()
+async def invoke_llm(request: LLMRequest):
+    dotenv.load_dotenv()
     authenticate(request.llm_type.lower(), request.secret_key)
 
     llm_type = request.llm_type if request.llm_type else ""
     options = request.options if request.options else {"Not necessary"}
 
-    response_content = generate_sync_response(llm_type, request.template, options)
+    response_content = await services.generate_sync_response(llm_type, request.template, options)
 
     if isinstance(response_content, set):
         response_content = list(response_content)
@@ -87,14 +86,14 @@ def invoke_llm(request: LLMRequest):
     description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 토큰화하여 Stream 형태로 제공됩니다." + MODEL_DESCRIPTION
 )
 def invoke_llm(request: LLMRequest):
-    load_dotenv()
+    dotenv.load_dotenv()
     authenticate(request.llm_type.lower(), request.secret_key)
 
     llm_type = request.llm_type if request.llm_type else ""
     options = request.options if request.options else {"Not necessary"}
 
     def response_generator():
-        for chunk in generate_response(
+        for chunk in services.generate_response(
                 llm_type, request.template, options
         ):
             yield chunk
@@ -108,14 +107,14 @@ def invoke_llm(request: LLMRequest):
     description="다음 파라미터를 전송해 LLM 서비스를 이용할 수 있습니다. 응답은 최소 단위로 토큰화하여 SSE를 통한 Stream 형태로 제공됩니다." + MODEL_DESCRIPTION
 )
 def invoke_llm_sse(request: LLMRequest):
-    load_dotenv()
+    dotenv.load_dotenv()
     authenticate(request.llm_type.lower(), request.secret_key)
 
     llm_type = request.llm_type if request.llm_type else ""
     options = request.options if request.options else {"Not necessary"}
 
     def response_generator():
-        for chunk in generate_response(
+        for chunk in services.generate_response(
                 llm_type, request.template, options
         ):
             yield f"data: {chunk}\n\n"
@@ -127,7 +126,7 @@ def authenticate(input_llm_type, input_secret_key):
     if is_paid_model(input_llm_type):
         authorize_paid_model(input_llm_type, input_secret_key)
     elif input_secret_key != os.environ.get("SECRET_KEY"):
-        throw_unauthorized_exception()
+        global_exception_handler.throw_unauthorized_exception()
 
 
 def is_paid_model(llm_type):
@@ -138,25 +137,17 @@ def authorize_paid_model(input_llm_type, input_secret_key):
     global paid_model_usage
 
     if (input_secret_key != os.environ.get("SECRET_KEY_FOR_PAID_MODEL")):
-        throw_paid_model_unauthorized_exception(input_llm_type)
+        global_exception_handler.throw_paid_model_unauthorized_exception(input_llm_type)
     else:
         paid_model_usage += 1
 
         # 유료 모델 일일 사용 한도를 10,000회로 제한
         if (paid_model_usage > 10_000):
-            throw_paid_model_usage_limit_exception(input_llm_type)
-        logger.info("%s API가 호출되었습니다. 일일 사용량: %d", input_llm_type, paid_model_usage)
+            global_exception_handler.throw_paid_model_usage_limit_exception(input_llm_type)
+        log.info("%s API가 호출되었습니다. 일일 사용량: %d", input_llm_type, paid_model_usage)
 
 
 def reset_gpt_usage():
     global paid_model_usage
     paid_model_usage = 0
-
-
-logger.info("유료 모델 사용량이 초기화 되었습니다. 일일 사용량: %d", paid_model_usage)
-
-scheduler = BackgroundScheduler()
-
-# 매일 자정마다 유료 모델 사용량 초기화
-scheduler.add_job(reset_gpt_usage, "cron", hour=0, minute=0)
-scheduler.start()
+    log.info("유료 모델 사용량이 초기화 되었습니다. 일일 사용량: %d", paid_model_usage)

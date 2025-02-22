@@ -1,14 +1,14 @@
 import os
 
+import dotenv
+import fastapi
+import starlette.middleware.cors
 import uvicorn
-from dotenv import load_dotenv
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
 
-from routers import router
+import routers
 
-load_dotenv()
-app = FastAPI(
+dotenv.load_dotenv()
+app = fastapi.FastAPI(
     title="생성형 AI 서버 API",
     description="""
     \n ## 다양한 생성형 AI 서비스를 제공하는 서버 API입니다.
@@ -27,14 +27,14 @@ app = FastAPI(
 )
 
 app.add_middleware(
-    CORSMiddleware,
+    starlette.middleware.cors.CORSMiddleware,
     allow_origins=[os.environ.get("FRONTEND_URL")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(routers.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=80)
